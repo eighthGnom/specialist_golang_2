@@ -27,6 +27,9 @@ func (storage Storage) Open() error {
 	return nil
 }
 
-func (storage Storage) Close() {
-	storage.db.Close()
+func (storage Storage) Close() error {
+	if err := storage.db.Close(); err != nil {
+		return nil
+	}
+	return nil
 }
