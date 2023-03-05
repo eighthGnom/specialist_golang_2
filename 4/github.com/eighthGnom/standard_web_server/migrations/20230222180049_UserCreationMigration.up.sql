@@ -1,7 +1,12 @@
 create table users (
-    id integer not null primary key,
-    user_name varchar not null,
-    emil varchar not null  unique,
-    age integer not null,
-    password_hash varchar not null
+    user_id bigserial not null primary key,
+    login varchar not null unique,
+    password varchar not null
+);
+
+create table articles (
+    article_id bigserial not null primary key,
+    title varchar not null unique,
+    author varchar not null,
+    content varchar not null
 );

@@ -7,15 +7,17 @@ import (
 )
 
 type Storage struct {
-	config *Config
-	db     *sql.DB
+	config            *Config
+	db                *sql.DB
+	userRepository    *UserRepository
+	articleRepository *ArticleRepository
 }
 
 func New(config *Config) *Storage {
 	return &Storage{config: config}
 }
 
-func (storage Storage) Open() error {
+func (storage *Storage) Open() error {
 	db, err := sql.Open("postgres", storage.config.DatabaseURI)
 	if err != nil {
 		return err
@@ -27,9 +29,29 @@ func (storage Storage) Open() error {
 	return nil
 }
 
-func (storage Storage) Close() error {
+func (storage *Storage) Close() error {
 	if err := storage.db.Close(); err != nil {
 		return nil
 	}
 	return nil
+}
+
+func (storage *Storage) User() *UserRepository {
+	if storage.userRepository != nil {
+		return storage.userRepository
+	}
+	storage.userRepository = &UserRepository{
+		storage: storage,
+	}
+	return storage.userRepository
+}
+
+func (storage *Storage) Article() *ArticleRepository {
+	if storage.articleRepository != nil {
+		return storage.articleRepository
+	}
+	storage.articleRepository = &ArticleRepository{
+		storage: storage,
+	}
+	return storage.articleRepository
 }
